@@ -21,7 +21,7 @@ function renderTasks() {
   tasks.forEach((task, index) => {
     const li = document.createElement("li");
     li.textContent = task.text;
-    if (task.completed = true) { 
+    if (task.completed) {
       li.style.textDecoration = "line-through";
     }
 
