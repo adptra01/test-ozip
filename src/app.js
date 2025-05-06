@@ -1,8 +1,28 @@
 const taskInput = document.getElementById("taskInput");
 const taskList = document.getElementById("taskList");
+
+let tasks = [
+  {
+    text: "Task 1",
+    completed: false,
+    createdAt: new Date(),
+  },
+  {
+    text: "Task 2",
+    completed: true,
+    createdAt: new Date(),
+  },
+];
+
+function addTask() {
+  const taskText = taskInput.value;
+  if (taskText === "") {
+    alert("Please enter a task");
+    return;
+  }
+  
 const filterCheckbox = document.getElementById("filterCheckbox");
 
-let tasks = [];
 let showOnlyUncompleted = false;
 
 function addTask() {
@@ -12,9 +32,10 @@ function addTask() {
   tasks.push({
     text: taskText,
     completed: false,
-    createdAt: new Date()
-  });
+    createdAt: new Date(),
+  };
 
+  tasks.push(task);
   taskInput.value = "";
   renderTasks();
 }
@@ -44,6 +65,9 @@ function toggleTask(index) {
   tasks[index].completed = !tasks[index].completed;
   renderTasks();
 }
+
+
+window.addEventListener("DOMContentLoaded", renderTasks);
 
 filterCheckbox.addEventListener("change", () => {
   showOnlyUncompleted = filterCheckbox.checked;
