@@ -13,5 +13,6 @@
 - Raihan: Bug 1
 - Riska: Fitur 2
 - Vanes: Fitur 1, Dokumentasi
+- Adi: Tampilan
 
 

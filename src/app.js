@@ -1,91 +1,102 @@
-const taskInput = document.getElementById("taskInput");
-const taskList = document.getElementById("taskList");
-const filterCheckbox = document.getElementById("filterCheckbox");
+    const taskInput = document.getElementById("taskInput");
+      const taskList = document.getElementById("taskList");
+      const filterCheckbox = document.getElementById("filterCheckbox");
 
-const STORAGE_KEY = "task-list";
+      const STORAGE_KEY = "task-list";
 
-let tasks = loadTasks();
-let showOnlyUncompleted = false;
+      let tasks = loadTasks();
+      let showOnlyUncompleted = false;
 
-renderTasks();
+      renderTasks();
 
-function addTask() {
-  const taskText = taskInput.value.trim();
-  if (taskText === "") return;
+      function addTask() {
+        const taskText = taskInput.value.trim();
+        if (taskText === "") return;
 
-  tasks.push({
-    text: taskText,
-    completed: false,
-    createdAt: new Date(),
-  });
+        tasks.push({
+          text: taskText,
+          completed: false,
+          createdAt: new Date(),
+        });
 
-  saveTasks(tasks);
-  taskInput.value = "";
-  renderTasks();
-}
+        saveTasks(tasks);
+        taskInput.value = "";
+        renderTasks();
+      }
 
-function renderTasks() {
-  taskList.innerHTML = "";
+      function renderTasks() {
+        taskList.innerHTML = "";
 
-  const filteredTasks = showOnlyUncompleted
-    ? tasks.filter((task) => !task.completed)
-    : tasks;
+        const filteredTasks = showOnlyUncompleted
+          ? tasks.filter((task) => !task.completed)
+          : tasks;
 
-  filteredTasks.forEach((task) => {
-    const indexInAllTasks = tasks.indexOf(task);
+        filteredTasks.forEach((task) => {
+          const indexInAllTasks = tasks.indexOf(task);
 
-    const li = document.createElement("li");
-    li.textContent = task.text;
+          const li = document.createElement("li");
+          if (task.completed) {
+            li.classList.add("completed");
+          }
 
-    if (task.completed) {
-      li.style.textDecoration = "line-through";
-    }
+          const taskContent = document.createElement("div");
+          taskContent.className = "task-content";
 
-    li.addEventListener("click", () => toggleTask(indexInAllTasks));
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.checked = task.completed;
+          checkbox.classList.add("form-check-input");
+          checkbox.addEventListener("change", () => toggleTask(indexInAllTasks));
 
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "Delete";
-    deleteBtn.style.marginLeft = "10px";
-    deleteBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      deleteTask(indexInAllTasks);
-    });
+          const span = document.createElement("span");
+          span.textContent = task.text;
+          span.className = "task-text";
 
-    li.appendChild(deleteBtn);
-    taskList.appendChild(li);
-  });
-}
+          taskContent.appendChild(checkbox);
+          taskContent.appendChild(span);
 
-taskInput.addEventListener("keypress", (event) => {
-  if (event.key === "Enter") {
-    addTask();
-  }
-});
+          const deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "Delete";
+          deleteBtn.classList.add("btn", "btn-sm", "btn-danger");
+          deleteBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            deleteTask(indexInAllTasks);
+          });
 
-function toggleTask(index) {
-  tasks[index].completed = !tasks[index].completed;
-  saveTasks(tasks);
-  renderTasks();
-}
+          li.appendChild(taskContent);
+          li.appendChild(deleteBtn);
+          taskList.appendChild(li);
+        });
+      }
 
-filterCheckbox.addEventListener("change", () => {
-  showOnlyUncompleted = filterCheckbox.checked;
-  renderTasks();
-});
+      taskInput.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+          addTask();
+        }
+      });
 
+      function toggleTask(index) {
+        tasks[index].completed = !tasks[index].completed;
+        saveTasks(tasks);
+        renderTasks();
+      }
 
+      filterCheckbox.addEventListener("change", () => {
+        showOnlyUncompleted = filterCheckbox.checked;
+        renderTasks();
+      });
 
-function saveTasks(tasks) {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-}
+      function saveTasks(tasks) {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+      }
 
-function loadTasks() {
-  const tasks = window.localStorage.getItem(STORAGE_KEY);
-  return tasks ? JSON.parse(tasks) : [];
-}
+      function loadTasks() {
+        const tasks = window.localStorage.getItem(STORAGE_KEY);
+        return tasks ? JSON.parse(tasks) : [];
+      }
 
-function deleteTask(index) {
-  tasks.splice(index, 1);
-  saveTasks(tasks);
-  renderTasks();
-}
+      function deleteTask(index) {
+        tasks.splice(index, 1);
+        saveTasks(tasks);
+        renderTasks();
+      }
